@@ -2,12 +2,7 @@ import { Accessor, createEffect, createSignal, JSX, onCleanup } from "solid-js";
 import "./app.css";
 import "./util/style/utility.css";
 import { CSSProperty } from "./util/animationUtil";
-import { MenuBar } from "./components/MenuBar";
-import { SVG, Path } from "./util/svg/entrypoint";
-import { LinearGradient } from "./util/svg/linearGradient";
-import { ClipPath } from "./util/svg/clipPath";
 import SunRays from "./components/SunRays";
-import Navigator from "./components/Navigator";
 
 const MainPageIndex = 0;
 
@@ -37,23 +32,24 @@ export default function App() {
       <SunRays mvmtFrequencyMultiplier={0.1} numRays={40} zRangeStart={0} />
       <h1
         class={`
-        page-title-aqua-marine 
+        page-title-white
+        calm-white    
         page-title-position 
         ${pageIndex() !== MainPageIndex ? "page-title-reduced" : ""}
         `}
       >
-        Kaisa
+        Lily
       </h1>
       <h1
         class={`
-          page-title-aqua-marine 
+          page-title-white
+          calm-white  
           page-title-position 
           page-title-surname-adjustment 
           ${pageIndex() !== MainPageIndex ? "page-title-reduced" : ""}`}
       >
         Wanscher
       </h1>
-      <Navigator pageIndex={pageIndex} setPageIndex={setPageIndex} />
     </main>
   );
 }

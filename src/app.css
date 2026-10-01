@@ -1,4 +1,5 @@
-html {
+:root {
+  /* Pure declarations */
   --site-breath-driver: 0; /* Goes between -1 to 1 */
   --site-elapsed-seconds: 0; /* Seconds since the page was loaded */
 
@@ -20,6 +21,26 @@ html {
     calc(50% * var(--bg-saturation-multiplier)),
     calc(80% * var(--bg-lightness-multiplier))
   );
+  /* Due to the way colors are diffed against the background, there is no way to figure out how the color is going to turn out really.
+  Pray to whichever god may find mercy upon your futile purpose. 
+  DOBG = Diffed On BackGround
+  */
+  --DOBG-cyan: hsl(0, 80%, 50%);
+  --DOBG-aqua: hsl(0, 40%, 50%);
+  --DOBG-purple: hsl(110, 40%, 40%);
+  --DOBG-golden: hsl(230, 100%, 45%);
+  --DOBG-copper: hsl(215, 100%, 40%);
+  --DOBG-redbrown: hsl(180, 40%, 40%);
+  --DOBG-white: hsla(0, 0%, 100%, 100%);
+  --white-blend-mode: plus-lighter;
+  --DOBG-black: hsla(5, 100%, 0%, 100%);
+  --black-blend-mode: darken;
+
+  margin: 0;
+  padding: 0;
+}
+html {
+  /* Derived declarations */
   --main-bg-gradient: linear-gradient(
     -45deg,
     var(--main-bg-gradient-stop-01),
@@ -36,24 +57,18 @@ html {
     var(--main-bg-gradient-stop-03)
   );
 
-  /* Due to the way colors are diffed against the background, there is no way to figure out how the color is going to turn out really.
-  Pray to whichever god may find mercy upon your futile purpose. 
-  DOBG = Diffed On BackGround
-  */
-  --DOBG-aqua: hsl(0, 40%, 50%);
   --DOBG-aqua-horizontal-gradient: linear-gradient(
     0deg,
-    hsl(0, 80%, 50%),
-    hsl(0, 40%, 50%),
-    hsl(0, 80%, 50%)
+    var(--DOBG-cyan),
+    var(--DOBG-aqua),
+    var(--DOBG-cyan)
   );
-
-  --DOBG-purple: hsl(110, 40%, 40%);
-  --DOBG-redbrown: hsl(180, 40%, 40%);
-  --DOBG-copper: hsl(215, 100%, 45%);
-
-  margin: 0;
-  padding: 0;
+  --DOBG-golden-horizontal-gradient: linear-gradient(
+    0deg, 
+    var(--DOBG-golden),
+    var(--DOBG-copper),
+    var(--DOBG-golden)
+  );
 }
 body {
   font-family:
@@ -102,18 +117,24 @@ body {
 .page-title-aqua-marine,
 .page-title-golden,
 .page-title-purple,
+.page-title-white,
+.page-title-black,
+.page-title-copper,
 .page-title-oscillating-hue {
   mix-blend-mode: difference;
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
   color: transparent; /* fallback */
-  font-style: bold;
+  font-weight: normal;
   --font-size: 20vh;
   font-size: var(--font-size);
 
   filter: drop-shadow(2px 2px 4px rgba(181, 224, 255, 0.6));
   transition: all 0.3s ease;
+}
+.calm-white {
+  --white-blend-mode: hard-light;
 }
 
 .page-title-reduced {
@@ -123,8 +144,16 @@ body {
 .page-title-aqua-marine {
   background-image: var(--DOBG-aqua-horizontal-gradient);
 }
+.page-title-white {
+  background-color: var(--DOBG-white);
+  mix-blend-mode: var(--white-blend-mode);
+}
+.page-title-black {
+  background-color: var(--DOBG-black);
+  mix-blend-mode: var(--black-blend-mode);
+}
 .page-title-golden {
-  background-color: var(--DOBG-copper);
+  background-image: var(--DOBG-golden-horizontal-gradient);
 }
 .page-title-purple {
   background-color: var(--DOBG-purple);
@@ -147,7 +176,7 @@ body {
 }
 .page-title-surname-adjustment {
   bottom: 0;
-  left: 1.2vh;
+  left: 0.4vw;
 }
 
 a {
