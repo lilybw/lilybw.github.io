@@ -6,26 +6,15 @@ import type { JSX } from "solid-js";
 interface SunRaysProps {
   numRays?: number;
   mvmtFrequencyMultiplier?: number;
+  /* Default 0 to -numRays */
+  zRangeStart?: number;
 }
 
 export default function SunRays(props: SunRaysProps) {
-  /*
-    createEffect(() => {
-        const drivers = new Array(props.numRays ?? 12).fill(0).map((_, i) => 
-            CSSProperty({name: `--sun-ray-${i}-driver`, target: document.documentElement})
-                .oscillate(-1, 1, 0.5 + i * 0.05)
-        );
-        
-        onCleanup(() => {
-          drivers.forEach(cleanUp => cleanUp());
-        })
-    })
-    */
-
   return (
     <div class="sun-rays">
       {new Array(props.numRays ?? 12).fill(0).map((_, i) => (
-        <div class="sun-ray" style={computeRayStyle(i, props)}></div>
+        <div class="sun-ray" style={computeRayStyle(i, props)} />
       ))}
     </div>
   );
@@ -37,6 +26,7 @@ const computeRayStyle = (
 ): JSX.CSSProperties => {
   settings.mvmtFrequencyMultiplier = settings.mvmtFrequencyMultiplier ?? 1;
   settings.numRays = settings.numRays ?? 12;
+  settings.zRangeStart = settings.zRangeStart ?? 0;
 
   const rayMovementFrequency =
     (Math.random() - 0.5) * 2 * settings.mvmtFrequencyMultiplier; // in Hz
@@ -77,6 +67,7 @@ const computeRayStyle = (
             ${rayColor}, 
             transparent ${50 + rayWidth / 2}%
         )`;
+
 
   return {
     left: computedLROffset,

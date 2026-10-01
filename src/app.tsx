@@ -34,18 +34,19 @@ export default function App() {
   return (
     <main>
       <div class="site-background"></div>
-      <SunRays mvmtFrequencyMultiplier={0.2} numRays={40} />
+      <SunRays mvmtFrequencyMultiplier={0.1} numRays={40} zRangeStart={0} />
       <h1
         class={`
-        page-title-purple 
+        page-title-aqua-marine 
         page-title-position 
-        ${pageIndex() !== MainPageIndex ? "page-title-reduced" : ""}`}
+        ${pageIndex() !== MainPageIndex ? "page-title-reduced" : ""}
+        `}
       >
         Kaisa
       </h1>
       <h1
         class={`
-          page-title-purple 
+          page-title-aqua-marine 
           page-title-position 
           page-title-surname-adjustment 
           ${pageIndex() !== MainPageIndex ? "page-title-reduced" : ""}`}
