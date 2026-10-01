@@ -138,18 +138,10 @@ export function computeNormalizedViewBox(bounds: PathBounds): string {
   const height = bounds.maxY - bounds.minY;
 
   if (width === 0) {
-    return "-1 -1 1 1";
+    return "-1 -1 2 2";
   }
 
-  const centerX = (bounds.minX + bounds.maxX) / 2;
-  const centerY = (bounds.minY + bounds.maxY) / 2;
-
-  const left = centerX - width / 2;
-  const bottom = centerY + height / 2;
-  const top = centerY - height / 2;
-  const right = centerX + width / 2;
-
-  return `${left} ${top} ${right} ${bottom}`;
+  return `${bounds.minX} ${bounds.minY} ${width} ${height}`;
 }
 
 export const normalizeSVGOptions = <T extends UserDefinedResources>(

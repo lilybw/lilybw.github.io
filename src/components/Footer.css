@@ -1,0 +1,9 @@
+.Footer {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    gap: 1vw;
+    right: 1vw;
+    bottom: 1vw;
+
+}

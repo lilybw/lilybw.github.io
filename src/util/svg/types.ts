@@ -19,7 +19,7 @@ export type ExpandAllValueTypesOfKeys<T, K extends keyof T, R> = {
 
 export type ExtendedSVGPathAttributes = ExpandAllValueTypesOfKeys<
   JSX.PathSVGAttributes<SVGPathElement>,
-  "stroke" | "fill" | "clip-path",
+  "stroke" | "fill" | "clip-path" | "mask",
   ReferencableResource
 >;
 

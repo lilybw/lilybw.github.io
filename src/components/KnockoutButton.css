@@ -1,0 +1,29 @@
+.knockout-button {
+  --knockout-radius: 1rem;
+  --knockout-border: 4px;
+  --knockout-filter: blur(4px) brightness(0.8);
+  position: relative;
+  padding: 1rem;
+  background: transparent;
+  border: var(--knockout-border) solid rgb(249 246 246 / 0.9);
+  border-radius: var(--knockout-radius);
+  box-shadow: 2px 2px 4px rgb(0 0 0 / 0.33);
+  transition: all 0.25s ease-in-out;
+}
+
+.knockout-button__layer {
+  position: absolute;
+  inset: 0;
+  border-radius: calc(var(--knockout-radius) - var(--knockout-border));
+  backdrop-filter: var(--knockout-filter);
+  mask-repeat: no-repeat;
+  mask-size: auto, 100% 100%;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+.knockout-button__label {
+  display: inline-block;
+  white-space: nowrap;
+  color: transparent;
+}
