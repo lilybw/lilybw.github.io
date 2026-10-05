@@ -1,10 +1,9 @@
-import { Accessor, createEffect, createSignal, JSX, onCleanup } from "solid-js";
+import { createEffect, createSignal, JSX, onCleanup } from "solid-js";
 import "./app.css";
+import "./index.css"
 import "./util/style/utility.css";
 import { CSSProperty } from "./util/animationUtil";
 import SunRays from "./components/SunRays";
-import Button from "./components/Button";
-import { KnockoutButton } from "./components/KnockoutButton";
 import Buttonth from "./components/Buttonth";
 import Menu from "./components/Menu";
 import Footer from "./components/Footer";
@@ -35,6 +34,11 @@ export default function App() {
     <main>
       <div class="site-background"></div>
       <SunRays mvmtFrequencyMultiplier={0.1} numRays={40} zRangeStart={0} />
+      <p class="disclaimer lora-bold">Hi, 
+        I see I have yet to complete this site before you visited.
+        The links on the right are functional, but other than that, I am afraid I owe you one.   
+      </p>
+      {/* 
       <Menu>
         <Buttonth class="card-like" textStyle={MenuButtonTextStyle}
           on:click={e => console.log("hi")} 
@@ -55,6 +59,7 @@ export default function App() {
           on:click={e => console.log("hi")} 
         >Music</Buttonth>
       </Menu>
+      */}
       <h1
         class={`
         page-title-white

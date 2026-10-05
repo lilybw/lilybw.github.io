@@ -1,0 +1,136 @@
+:root {
+  /* Pure declarations */
+  --site-breath-driver: 0; /* Goes between -1 to 1 */
+  --site-elapsed-seconds: 0; /* Seconds since the page was loaded */
+
+  --bg-saturation-multiplier: calc(var(--site-breath-driver) / 2 + 2);
+  --bg-lightness-multiplier: 1;
+  --main-bg-gradient-stop-01: hsl(
+    200,
+    calc(50% * var(--bg-saturation-multiplier)),
+    calc(80% * var(--bg-lightness-multiplier))
+  );
+  --main-bg-gradient-stop-02: hsl(
+    250,
+    calc(50% * var(--bg-saturation-multiplier)),
+    calc(80% * var(--bg-lightness-multiplier))
+  );
+  --main-bg-gradient-stop-03: hsl(0, 0%, 100%);
+  --main-bg-gradient-stop-04: hsl(
+    0,
+    calc(50% * var(--bg-saturation-multiplier)),
+    calc(80% * var(--bg-lightness-multiplier))
+  );
+  /* Due to the way colors are diffed against the background, there is no way to figure out how the color is going to turn out really.
+  Pray to whichever god may find mercy upon your futile purpose. 
+  DOBG = Diffed On BackGround
+  */
+  --DOBG-cyan: hsl(0, 80%, 50%);
+  --DOBG-aqua: hsl(0, 40%, 50%);
+  --DOBG-purple: hsl(110, 40%, 40%);
+  --DOBG-golden: hsl(230, 100%, 45%);
+  --DOBG-copper: hsl(215, 100%, 40%);
+  --DOBG-redbrown: hsl(180, 40%, 40%);
+  --DOBG-white: hsla(0, 0%, 100%, 100%);
+  --white-blend-mode: plus-lighter;
+  --DOBG-black: hsla(5, 100%, 0%, 100%);
+  --black-blend-mode: darken;
+
+  margin: 0;
+  padding: 0;
+  transition: all 0.5s ease-in-out;
+}
+html {
+  /* Derived declarations */
+  --main-bg-gradient: linear-gradient(
+    -45deg,
+    var(--main-bg-gradient-stop-01),
+    var(--main-bg-gradient-stop-02),
+    var(--main-bg-gradient-stop-03),
+    var(--main-bg-gradient-stop-01),
+    var(--main-bg-gradient-stop-02),
+    var(--main-bg-gradient-stop-03),
+    var(--main-bg-gradient-stop-01),
+    var(--main-bg-gradient-stop-02),
+    var(--main-bg-gradient-stop-03),
+    var(--main-bg-gradient-stop-01),
+    var(--main-bg-gradient-stop-02),
+    var(--main-bg-gradient-stop-03)
+  );
+
+  --DOBG-aqua-horizontal-gradient: linear-gradient(
+    0deg,
+    var(--DOBG-cyan),
+    var(--DOBG-aqua),
+    var(--DOBG-cyan)
+  );
+  --DOBG-golden-horizontal-gradient: linear-gradient(
+    0deg, 
+    var(--DOBG-golden),
+    var(--DOBG-copper),
+    var(--DOBG-golden)
+  );
+}
+
+@import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400..700;1,400..700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400;1,700&family=Lora:ital,wght@0,400..700;1,400..700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400;1,700&family=Lora:ital,wght@0,400..700;1,400..700&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap');
+
+body {
+  font-family:
+    Lora, Gordita, Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue",
+    serif;
+
+  width: 100vw;
+  height: 100vh;
+
+  overflow: hidden;
+  margin: 0;
+  padding: 0;
+  transition: all 0.3s ease;
+}
+
+/* FONTS */
+.courier-prime-regular {
+  font-family: "Courier Prime", monospace;
+  font-weight: 400;
+  font-style: normal;
+}
+
+.courier-prime-bold {
+  font-family: "Courier Prime", monospace;
+  font-weight: 700;
+  font-style: normal;
+}
+
+.courier-prime-regular-italic {
+  font-family: "Courier Prime", monospace;
+  font-weight: 400;
+  font-style: italic;
+}
+
+.courier-prime-bold-italic {
+  font-family: "Courier Prime", monospace;
+  font-weight: 700;
+  font-style: italic;
+}
+
+.lora-normal {
+  font-family: "Lora", serif;
+  font-optical-sizing: auto;
+  font-weight: normal;
+  font-style: normal;
+}
+.lora-bold {
+  font-family: "Lora", serif;
+  font-optical-sizing: auto;
+  font-weight: bold;
+  font-style: normal;
+}
+
+.playfair-display-normal {
+  font-family: "Playfair Display", serif;
+  font-optical-sizing: auto;
+  font-weight: normal;
+  font-style: normal;
+}
