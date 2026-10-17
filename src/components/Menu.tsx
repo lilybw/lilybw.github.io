@@ -47,20 +47,22 @@ export default function Menu(props: { children: JSX.Element}) {
             <path d={secondaryPetal(secondaryLeafBodyWidth, {x: 0.5, y: 0.5}, secondaryLeafOffst, 2, 50)} {...toHtmlAttr(gToggle)} />
             <path d={secondaryPetal(secondaryLeafBodyWidth, {x: 0.5, y: -0.5}, secondaryLeafOffst, 2, 50)} {...toHtmlAttr(hToggle)} />
         </svg>
+
         {aHover() && About()}
-        {aHover() && Career()}
-        {aHover() && Projects()}
-        {aHover() && TBD()}
+        {bHover() && Career()}
+        {cHover() && Projects()}
+        {dHover() && TBD()}
 
         {props.children}
     </div>)
 }
 
-const About = () => <></>
-const Career = () => <></>
-const Projects = () => <></>
-const TBD = () => <></>
+const About = () => AbsolutelySquiggly(<></>)
+const Career = () => AbsolutelySquiggly(<></>)
+const Projects = () => AbsolutelySquiggly(<></>)
+const TBD = () => AbsolutelySquiggly(<></>)
 
+const AbsolutelySquiggly = (children?: JSX.Element) => <div style="position: absolute;" class="quintessential">{children}</div>
 
 // Thanks Claude for making up for my D in Math
 
