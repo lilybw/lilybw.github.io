@@ -62,7 +62,7 @@
   color: transparent; /* fallback */
   font-family: Playfair Display, serif;
   font-weight: normal;
-  --font-size: 20vh;
+  --font-size: 10vh;
   font-size: var(--font-size);
 
   filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.326));
@@ -79,6 +79,7 @@
 }
 .page-title-white {
   background-color: var(--DOBG-white);
+
   mix-blend-mode: var(--white-blend-mode);
 }
 .page-title-black {
@@ -119,11 +120,15 @@ main {
   transition: all 0.3s ease-in-out;
 }
 
+.button-disabled {
+  color: var(--first-darkening);
+  border-color: var(--first-darkening);
+}
 
 h1 {
   color: #335d92;
   text-transform: uppercase;
-  font-size: 4rem;
+  font-size: 3.5rem;
   font-weight: 100;
   line-height: 1.1;
   margin: 4rem auto;

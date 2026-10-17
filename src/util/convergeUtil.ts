@@ -1,7 +1,9 @@
-export const convergeToArray = <T>(e: undefined | null | T | T[]): T[] => {
+export const convergeToArray = <T>(e: undefined | null | T | (() => T) |  (() => T[]) | T[]): T[] => {
   if (!e || e === null) {
     return [];
   }
+
+  if (typeof e === "function") { e = (e as () => T | T[])() }
 
   return Array.isArray(e) ? e : [e];
 };

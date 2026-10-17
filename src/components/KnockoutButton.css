@@ -5,9 +5,9 @@
   position: relative;
   padding: 1rem;
   background: transparent;
-  border: var(--knockout-border) solid rgba(249, 248, 248, 0.54);
+  border: var(--knockout-border) solid rgba(248, 6, 6, 0.171);
   border-radius: var(--knockout-radius);
-  box-shadow: 2px 2px 4px rgb(0 0 0 / 0.33);
+  box-shadow: 0px 0px 8px rgb(254, 254, 254);
   transition: all 0.25s ease-in-out;
 }
 
@@ -15,7 +15,7 @@
   position: absolute;
   inset: 0;
   border-radius: calc(var(--knockout-radius) - var(--knockout-border));
-  backdrop-filter: var(--knockout-filter);
+  backdrop-filter: none;
   mask-repeat: no-repeat;
   mask-size: auto, 100% 100%;
   mask-composite: exclude;

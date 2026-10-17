@@ -1,6 +1,7 @@
 import { createEffect, createSignal, JSX, onCleanup } from "solid-js";
 import "./app.css";
 import "./index.css"
+import "./fonts.css"
 import "./util/style/utility.css";
 import { CSSProperty } from "./util/animationUtil";
 import SunRays from "./components/SunRays";
@@ -8,10 +9,7 @@ import Buttonth from "./components/Buttonth";
 import Menu from "./components/Menu";
 import Footer from "./components/Footer";
 
-const MainPageIndex = 0;
-
 export default function App() {
-  const [pageIndex, setPageIndex] = createSignal(1);
 
   createEffect(() => {
     const clearSiteBreath = CSSProperty({
@@ -38,11 +36,13 @@ export default function App() {
         I see I have yet to complete this site before you visited.
         The links on the right are functional, but other than that, I am afraid I owe you one.   
       </p>
-      {/* 
+      
       <Menu>
-        <Buttonth class="card-like" textStyle={MenuButtonTextStyle}
+        {/* 
+        <Buttonth class="card-like button-disabled" textStyle={MenuButtonTextStyle}
           on:click={e => console.log("hi")} 
         >Career</Buttonth>
+        
         <Buttonth class="card-like" textStyle={MenuButtonTextStyle}
           on:click={e => console.log("hi")} 
         >Contact</Buttonth>
@@ -58,25 +58,23 @@ export default function App() {
         <Buttonth class="card-like" textStyle={MenuButtonTextStyle}
           on:click={e => console.log("hi")} 
         >Music</Buttonth>
+        */}
       </Menu>
-      */}
+      
       <h1
         class={`
         page-title-white
-        calm-white    
         page-title-position 
-        ${pageIndex() !== MainPageIndex ? "page-title-reduced" : ""}
-        `}
+        `} style="mix-blend-mode: normal;"
       >
         Lily
       </h1>
       <h1
         class={`
           page-title-white
-          calm-white  
           page-title-position 
-          page-title-surname-adjustment 
-          ${pageIndex() !== MainPageIndex ? "page-title-reduced" : ""}`}
+          page-title-surname-adjustment `}  
+          style="mix-blend-mode: normal;"
       >
         Wanscher
       </h1>
@@ -86,6 +84,6 @@ export default function App() {
 }
 
 const MenuButtonTextStyle: JSX.HTMLAttributes<JSX.Element> = { style: {
-    color:" white", 
+    color: "black", 
     "font-size": "4rem",
 }}
