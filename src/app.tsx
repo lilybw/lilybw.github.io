@@ -32,10 +32,6 @@ export default function App() {
     <main>
       <div class="site-background"></div>
       <SunRays mvmtFrequencyMultiplier={0.1} numRays={40} zRangeStart={0} />
-      <p class="disclaimer lora-bold">Hi, 
-        I see I have yet to complete this site before you visited.
-        The links on the right are functional, but other than that, I am afraid I owe you one.   
-      </p>
       
       <Menu>
         {/* 

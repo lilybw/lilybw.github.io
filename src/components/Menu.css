@@ -4,8 +4,8 @@
     left: 50%;
     transform: translate(-50%,-50%);
     
-    width: 50vh;
-    height: 50vh;
+    width: 66vh;
+    height: 66vh;
 
     display: flex;
     z-index: 1;
@@ -14,7 +14,17 @@
     margin: 0;
 }
 .magicka {
-    position: absolute;
     width: 100%;
     height: 100%;
+    mix-blend-mode: difference;
+}
+.petal {
+    transform-box: view-box;    /* origin is measured in SVG coordinates, not the petal's own box */
+    transform-origin: 0 0;      /* = flower centre */
+    transition: transform 250ms ease-out;
+    fill: rgba(130, 0, 181, 0.598);
+    mix-blend-mode: difference;
+}
+.petal:hover {
+    transform: scale(1.1);
 }

@@ -62,7 +62,7 @@
   color: transparent; /* fallback */
   font-family: Playfair Display, serif;
   font-weight: normal;
-  --font-size: 10vh;
+  --font-size: 8.25vh;
   font-size: var(--font-size);
 
   filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.326));
@@ -101,7 +101,7 @@
   left: 0;
   --line-height: 0.7;
   line-height: 0.8;
-  bottom: calc(var(--font-size) * 0.6);
+  bottom: calc(var(--font-size) * 0.8);
   text-align: left;
   margin: 0;
   padding: 0;
