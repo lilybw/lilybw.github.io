@@ -50,12 +50,16 @@ export default function Menu(props: MenuProps) {
         </svg>
         {props.children}
     </div>
-    {false && About()}
-    {bHover() && Career()}
-    {cHover() && Projects()}
-    {dHover() && TBD()}
+    {aHover() && TempTitle("About")}
+    {bHover() && TempTitle("Career")}
+    {cHover() && TempTitle("Projects")}
+    {dHover() && TempTitle("TBD")}
     </>)
 }
+
+const TempTitle = (value: string) => 
+    <h1 class="quintessential" style="color: white; position: absolute; width: 100vw; left: 50%; top: 12vh; transform: translateX(-50%); text-transform: uppercase;">{value}</h1>
+
 const About = () => AbsolutelySquiggly(<div style="position: absolute; width: 100%; height; 100%">
         <h2 style="right:5vw; top:10vh; position: absolute;">ABOUT</h2>
         <svg stroke="rgba(255,255,255,0.75)" stroke-width={"1%"} viewBox={mkViewBox(50, 25)} style="position: absolute; width: 43vw; height: 20vh; top: 10vh; right: 12vw; filter: drop-shadow(0px 4px 2px rgba(0,0,0,0.55));">
