@@ -1,5 +1,4 @@
 import { createSignal, type Component, type JSX, type Signal } from "solid-js";
-import { RAY_INIT_COLOR } from "~/app";
 
 /** A color in HSL space. Hue in degrees [0, 360); saturation and lightness in percent [0, 100]. */
 export interface HSL {
@@ -21,6 +20,8 @@ export interface HueSatPickerProps {
     lightRate?: number;
     /** Edge length of the swatch. Defaults to `"3rem"`. */
     size?: string;
+    /** Maps the current color to the fan's card fills: front, back-left, back-right. Defaults to the color itself. */
+    palette?: (color: HSL) => ReadonlyArray<string>;
 }
 
 /** Formats an `HSL` as a CSS `hsl()` color string. */
@@ -29,10 +30,25 @@ export const toCss = (c: HSL): string => `hsl(${c.h} ${c.s}% ${c.l}%)`;
 const wrap = (deg: number): number => ((deg % 360) + 360) % 360;
 const clamp = (v: number, lo: number, hi: number): number => Math.min(hi, Math.max(lo, v));
 
+const FanCard: Component<{ fill: string; rotate: number }> = (p) => (
+    <rect
+        x="8" y="3.5" width="8" height="16" rx="2.2"
+        transform={`rotate(${p.rotate} 12 19)`}
+        style={{
+            fill: p.fill,
+            stroke: "rgba(10, 8, 25, 0.5)",
+            "stroke-width": "1.2px",
+            "stroke-linejoin": "round",
+            "paint-order": "stroke",
+        }}
+    />
+);
+
 /** Swatch displaying the current color. Drag X shifts hue (wrapping), drag Y sets saturation (up = more),
- *  scroll sets lightness (up = lighter). */
+ *  scroll sets lightness (up = lighter), double-click resets to `initial`. */
 export const HueSatPicker: Component<HueSatPickerProps> = (props) => {
-    const [color, setColor]: Signal<HSL> = createSignal<HSL>(props.initial ?? { h: 270, s: 70, l: 60 });
+    const original: HSL = props.initial ?? { h: 270, s: 70, l: 60 };
+    const [color, setColor]: Signal<HSL> = createSignal<HSL>(original);
     const [dragging, setDragging]: Signal<boolean> = createSignal<boolean>(false);
     let last: { x: number; y: number } | null = null;
 
@@ -71,7 +87,14 @@ export const HueSatPicker: Component<HueSatPickerProps> = (props) => {
         setDragging(false);
     };
 
+    const reset = (): void => commit(original);
+
     const onKeyDown: JSX.EventHandler<HTMLDivElement, KeyboardEvent> = (e) => {
+        if (e.key === "Home") {
+            e.preventDefault();
+            reset();
+            return;
+        }
         const step: number = e.shiftKey ? 10 : 2;
         const moves: Record<string, [number, number, number]> = {
             ArrowLeft: [-step, 0, 0],
@@ -87,9 +110,11 @@ export const HueSatPicker: Component<HueSatPickerProps> = (props) => {
         nudge(move[0], move[1], move[2]);
     };
 
-    const style = (): JSX.CSSProperties => {
+    // Host must not form a stacking context (no filter/transform/opacity), or the frame's blend is isolated.
+    const hostStyle = (): JSX.CSSProperties => {
         const size: string = props.size ?? "3rem";
         return {
+            position: "relative",
             display: "block",
             margin: "auto",
             width: size,
@@ -97,16 +122,41 @@ export const HueSatPicker: Component<HueSatPickerProps> = (props) => {
             height: size,
             "min-height": size,
             "border-radius": "1rem",
-            background: toCss(color()),
             cursor: dragging() ? "grabbing" : "grab",
             "touch-action": "none",
             "user-select": "none",
-            transform: dragging() ? "scale(1.1)" : "none",
-            transition: "transform 120ms ease",
         };
     };
 
-    const reset = (): void => commit(RAY_INIT_COLOR);
+    const layer = (inset: string, radius: string): JSX.CSSProperties => ({
+        position: "absolute",
+        inset,
+        "border-radius": radius,
+        transform: dragging() ? "scale(1.1)" : "none",
+        transition: "transform 120ms ease",
+    });
+
+    const frameStyle = (): JSX.CSSProperties => ({
+        ...layer("0", "1rem"),
+        background: "var(--DOBG-purple)",
+        filter: "drop-shadow(rgba(0,0,0,0.5) 0 0 10px)",
+        "mix-blend-mode": "difference",
+    });
+
+    const iconStyle = (): JSX.CSSProperties => ({
+        ...layer("auto", "0"),
+        top: "8%",
+        left: "8%",
+        width: "84%",
+        height: "84%",
+        overflow: "visible",
+    });
+
+    const fills = (): [string, string, string] => {
+        const p: ReadonlyArray<string> = props.palette?.(color()) ?? [];
+        const front: string = p[0] ?? toCss(color());
+        return [front, p[1] ?? front, p[2] ?? front];
+    };
 
     return (
         <div
@@ -118,15 +168,22 @@ export const HueSatPicker: Component<HueSatPickerProps> = (props) => {
             aria-valuenow={Math.round(color().h)}
             aria-valuetext={`Hue ${Math.round(color().h)}°, saturation ${Math.round(color().s)}%, lightness ${Math.round(color().l)}%`}
             title="hue ↔ saturation ↕ lightness <scroll> dbclick for reset"
-            style={style()}
+            style={hostStyle()}
             onPointerDown={onPointerDown}
             onPointerMove={onPointerMove}
             onPointerUp={onPointerEnd}
             onPointerCancel={onPointerEnd}
             onLostPointerCapture={onPointerEnd}
             onWheel={onWheel}
-            onKeyDown={onKeyDown}
             onDblClick={reset}
-        />
+            onKeyDown={onKeyDown}
+        >
+            <div style={frameStyle()} />
+            <svg viewBox="0 0 24 24" aria-hidden="true" style={iconStyle()}>
+                <FanCard fill={fills()[1]} rotate={-28} />
+                <FanCard fill={fills()[2]} rotate={28} />
+                <FanCard fill={fills()[0]} rotate={0} />
+            </svg>
+        </div>
     );
 };

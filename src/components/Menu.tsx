@@ -6,10 +6,12 @@ export type MenuProps = {
     children?: JSX.Element;
 }
 
-const primeLeafBodyWidth = 10
-const secondaryLeafBodyWidth = 16
+const primeLeafBodyWidth = 8.8
+const secondaryLeafBodyWidth = 10.4
 const secondaryLeafOffst = 10
+const secondaryLeafSpread = 45
 const primeStartOffset = primeLeafBodyWidth * 0.66
+const mkViewBox = (width: number, height: number) => `${-width} ${-height} ${width * 2} ${height * 2}`
 
 export default function Menu(props: MenuProps) {
     // Primary
@@ -24,45 +26,48 @@ export default function Menu(props: MenuProps) {
     const [gHover, gToggle] = createToggle()
     const [hHover, hToggle] = createToggle()
 
-    const mkViewBox = (width: number, height: number) => `${-width} ${-height} ${width * 2} ${height * 2}`
     const toHtmlAttr = (toggle: [SetOn, SetOff]): JSX.PathSVGAttributes<SVGPathElement> => {
         return {
             "on:mouseenter": toggle[0],
             "on:mouseleave": toggle[1],
-            "class": "petal"
         }
     }
 
     return (
+        <>
     <div class="Menu">
         <svg fill="transparent" viewBox={mkViewBox(50,50)} class="magicka">
             {/* Primary leaves */}
-            <path d={primaryPetal(primeLeafBodyWidth, {x: 0, y: -1}, primeStartOffset)} {...toHtmlAttr(aToggle)} />
-            <path d={primaryPetal(primeLeafBodyWidth, {x: 1, y: 0}, primeStartOffset)} {...toHtmlAttr(bToggle)} />
-            <path d={primaryPetal(primeLeafBodyWidth, {x: 0, y: 1}, primeStartOffset)} {...toHtmlAttr(cToggle)} />
-            <path d={primaryPetal(primeLeafBodyWidth, {x: -1, y: 0}, primeStartOffset)} {...toHtmlAttr(dToggle)} />
+            <path d={primaryPetal(primeLeafBodyWidth, {x: 0, y: -1}, primeStartOffset)} {...toHtmlAttr(aToggle)}  class="petal"/>
+            <path d={primaryPetal(primeLeafBodyWidth, {x: 1, y: 0}, primeStartOffset)} {...toHtmlAttr(bToggle)}  class="petal"/>
+            <path d={primaryPetal(primeLeafBodyWidth, {x: 0, y: 1}, primeStartOffset)} {...toHtmlAttr(cToggle)}  class="petal"/>
+            <path d={primaryPetal(primeLeafBodyWidth, {x: -1, y: 0}, primeStartOffset)} {...toHtmlAttr(dToggle)}  class="petal"/>
             {/* Secondary leaves */}
-            <path d={secondaryPetal(secondaryLeafBodyWidth, {x: -0.5, y: -0.5}, secondaryLeafOffst, 2, 50)} {...toHtmlAttr(eToggle)} />
-            <path d={secondaryPetal(secondaryLeafBodyWidth, {x: -0.5, y: 0.5}, secondaryLeafOffst, 2, 50)} {...toHtmlAttr(fToggle)} />
-            <path d={secondaryPetal(secondaryLeafBodyWidth, {x: 0.5, y: 0.5}, secondaryLeafOffst, 2, 50)} {...toHtmlAttr(gToggle)} />
-            <path d={secondaryPetal(secondaryLeafBodyWidth, {x: 0.5, y: -0.5}, secondaryLeafOffst, 2, 50)} {...toHtmlAttr(hToggle)} />
+            <path d={secondaryPetal(secondaryLeafBodyWidth, {x: -0.5, y: -0.5}, secondaryLeafOffst, 2, secondaryLeafSpread)} {...toHtmlAttr(eToggle)} class="petal2" />
+            <path d={secondaryPetal(secondaryLeafBodyWidth, {x: -0.5, y: 0.5}, secondaryLeafOffst, 2, secondaryLeafSpread)} {...toHtmlAttr(fToggle)} class="petal2" />
+            <path d={secondaryPetal(secondaryLeafBodyWidth, {x: 0.5, y: 0.5}, secondaryLeafOffst, 2, secondaryLeafSpread)} {...toHtmlAttr(gToggle)} class="petal2" />
+            <path d={secondaryPetal(secondaryLeafBodyWidth, {x: 0.5, y: -0.5}, secondaryLeafOffst, 2, secondaryLeafSpread)} {...toHtmlAttr(hToggle)} class="petal2" />
         </svg>
-
-        {aHover() && About()}
-        {bHover() && Career()}
-        {cHover() && Projects()}
-        {dHover() && TBD()}
-
         {props.children}
-    </div>)
+    </div>
+    {false && About()}
+    {bHover() && Career()}
+    {cHover() && Projects()}
+    {dHover() && TBD()}
+    </>)
 }
-
-const About = () => AbsolutelySquiggly(<></>)
+const About = () => AbsolutelySquiggly(<div style="position: absolute; width: 100%; height; 100%">
+        <h2 style="right:5vw; top:10vh; position: absolute;">ABOUT</h2>
+        <svg stroke="rgba(255,255,255,0.75)" stroke-width={"1%"} viewBox={mkViewBox(50, 25)} style="position: absolute; width: 43vw; height: 20vh; top: 10vh; right: 12vw; filter: drop-shadow(0px 4px 2px rgba(0,0,0,0.55));">
+            <path d="M -100 50 L -30 0 Z" />
+            <path d="M -27 -1 L 100 -1 Z" />
+        </svg>
+</div>)
 const Career = () => AbsolutelySquiggly(<></>)
 const Projects = () => AbsolutelySquiggly(<></>)
 const TBD = () => AbsolutelySquiggly(<></>)
 
-const AbsolutelySquiggly = (children?: JSX.Element) => <div style="position: absolute;" class="quintessential">{children}</div>
+const AbsolutelySquiggly = (children?: JSX.Element) => <div style="color: black" class="quintessential">{children}</div>
 
 // Thanks Claude for making up for my D in Math
 

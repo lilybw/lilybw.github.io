@@ -18,12 +18,20 @@
     width: 100%;
     height: 100%;
 }
-.petal {
+.petal, .petal2 {
     transform-box: view-box;    /* origin is measured in SVG coordinates, not the petal's own box */
     transform-origin: 0 0;      /* = flower centre */
     transition: transform 250ms ease-out;
-    fill: var(--DOBG-aqua);
+    fill: var(--DOBG-purple);
+}
+.petal:hover, .petal2:hover {
+    transform: scale(1.1);
+    z-index: 4;
+    fill: var(--DOBG-pink);
 }
 .petal:hover {
+    transform: scale(0.9);
+}
+.petal2:hover{
     transform: scale(1.1);
 }

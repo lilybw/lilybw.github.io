@@ -3,6 +3,7 @@ import { Mask } from "~/util/svg/mask";
 import "./Footer.css";
 import { createSignal, Setter, type Component, type JSX } from "solid-js";
 import { HSL, HueSatPicker } from "./HueSatPicker";
+import { RAY_PALETTE } from "./SunRays";
 
 export function LinkedThumbnail(props: { src: URL, href: URL }) {
     return (
@@ -32,7 +33,7 @@ export default function Footer({ sunRaysHueRotation, rayInitColor }: FooterProps
         <a href={sourceCodeRef()}>
             <SourceCodeThumbnail />
         </a>
-        <HueSatPicker initial={rayInitColor} onChange={sunRaysHueRotation} />
+        <HueSatPicker initial={rayInitColor} onChange={sunRaysHueRotation} palette={RAY_PALETTE} />
         </div>
     )
 }

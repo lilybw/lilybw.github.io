@@ -12,7 +12,23 @@ interface SunRaysProps {
 }
 
 /** Hue offset per ray (cycled by index) relative to `colorShift().h`; `null` renders a white ray. */
-const HUE_OFFSETS: ReadonlyArray<number | null> = [0, 50, null, 50];
+export const HUE_OFFSETS: ReadonlyArray<number | null> = [0, 50, null, 50];
+
+/** CSS color of a ray from base `h`, `s`, `l` CSS expressions and a hue offset; `null` yields white. */
+const rayColor = (h: string, s: string, l: string, hueOffset: number | null): string =>
+  hueOffset === null
+    ? `hsl(0, 0%, 100%)`
+    : `hsl(
+            calc(${h} + ${hueOffset}),
+            calc(${s} * var(--bg-saturation-multiplier)),
+            calc(${l} * var(--bg-lightness-multiplier))
+        )`;
+
+/** The distinct ray colors for `base`, in `HUE_OFFSETS` order. */
+export const RAY_PALETTE = (base: HSL): string[] =>
+  [...new Set(HUE_OFFSETS)].map((o: number | null): string =>
+    rayColor(`${base.h}`, `${base.s}%`, `${base.l}%`, o),
+  );
 
 export default function SunRays(props: SunRaysProps): JSX.Element {
   const numRays: number = props.numRays ?? 12;
@@ -59,18 +75,11 @@ const computeRayStyle = (
         )`;
   const rayWidth: number = Math.random() * 5 + 5; // in vw, since the container is 400vw wide
   const hueOffset: number | null = HUE_OFFSETS[index % HUE_OFFSETS.length] ?? null;
-  const rayColor: string =
-    hueOffset === null
-      ? `hsl(0, 0%, 100%)`
-      : `hsl(
-            calc(var(--ray-h) + ${hueOffset}),
-            calc(var(--ray-s) * var(--bg-saturation-multiplier)),
-            calc(var(--ray-l) * var(--bg-lightness-multiplier))
-        )`;
+  const color: string = rayColor("var(--ray-h)", "var(--ray-s)", "var(--ray-l)", hueOffset);
   const computedBackground: string = `linear-gradient(
             -56deg,
             transparent ${50 - rayWidth / 2}%,
-            ${rayColor},
+            ${color},
             transparent ${50 + rayWidth / 2}%
         )`;
 
