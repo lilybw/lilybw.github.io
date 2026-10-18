@@ -11,7 +11,7 @@ const secondaryLeafBodyWidth = 16
 const secondaryLeafOffst = 10
 const primeStartOffset = primeLeafBodyWidth * 0.66
 
-export default function Menu(props: { children: JSX.Element}) {
+export default function Menu(props: MenuProps) {
     // Primary
     const [aHover, aToggle] = createToggle()
     const [bHover, bToggle] = createToggle()

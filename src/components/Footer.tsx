@@ -1,7 +1,8 @@
 import { SVG, Path } from "~/util/svg/entrypoint";
 import { Mask } from "~/util/svg/mask";
 import "./Footer.css";
-import { createSignal, type Component, type JSX } from "solid-js";
+import { createSignal, Setter, type Component, type JSX } from "solid-js";
+import { HSL, HueSatPicker } from "./HueSatPicker";
 
 export function LinkedThumbnail(props: { src: URL, href: URL }) {
     return (
@@ -13,7 +14,12 @@ export function LinkedThumbnail(props: { src: URL, href: URL }) {
 
 export const [sourceCodeRef, setSrcRef] = createSignal("https://github.com/lilybw/lilybw.github.io/blob/main/src/app.tsx")
 
-export default function Footer(props: unknown) {
+interface FooterProps {
+    rayInitColor: HSL;
+    sunRaysHueRotation: Setter<HSL>;
+}
+
+export default function Footer({ sunRaysHueRotation, rayInitColor }: FooterProps) {
 
     return (
         <div class="Footer">
@@ -26,6 +32,7 @@ export default function Footer(props: unknown) {
         <a href={sourceCodeRef()}>
             <SourceCodeThumbnail />
         </a>
+        <HueSatPicker initial={rayInitColor} onChange={sunRaysHueRotation} />
         </div>
     )
 }

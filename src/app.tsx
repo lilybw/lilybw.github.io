@@ -8,7 +8,9 @@ import SunRays from "./components/SunRays";
 import Buttonth from "./components/Buttonth";
 import Menu from "./components/Menu";
 import Footer from "./components/Footer";
+import { HSL } from "./components/HueSatPicker";
 
+export const RAY_INIT_COLOR = { h: 200, s: 50, l: 80 }
 export default function App() {
 
   createEffect(() => {
@@ -28,34 +30,13 @@ export default function App() {
     });
   });
 
+  const [rayColorShift, setRayColorShift] = createSignal<HSL>(RAY_INIT_COLOR)
+
   return (
     <main>
       <div class="site-background"></div>
-      <SunRays mvmtFrequencyMultiplier={0.1} numRays={40} zRangeStart={0} />
-      
-      <Menu>
-        {/* 
-        <Buttonth class="card-like button-disabled" textStyle={MenuButtonTextStyle}
-          on:click={e => console.log("hi")} 
-        >Career</Buttonth>
-        
-        <Buttonth class="card-like" textStyle={MenuButtonTextStyle}
-          on:click={e => console.log("hi")} 
-        >Contact</Buttonth>
-        <Buttonth class="card-like" textStyle={MenuButtonTextStyle}
-          on:click={e => console.log("hi")} 
-        >Somth</Buttonth>
-        <Buttonth class="card-like" textStyle={MenuButtonTextStyle}
-          on:click={e => console.log("hi")} 
-        >Projects</Buttonth>
-        <Buttonth class="card-like" textStyle={MenuButtonTextStyle}
-          on:click={e => console.log("hi")} 
-        >Graphics</Buttonth>
-        <Buttonth class="card-like" textStyle={MenuButtonTextStyle}
-          on:click={e => console.log("hi")} 
-        >Music</Buttonth>
-        */}
-      </Menu>
+      <SunRays mvmtFrequencyMultiplier={0.1} numRays={40} zRangeStart={0} colorShift={rayColorShift} />
+      <Menu />
       
       <h1
         class={`
@@ -74,7 +55,7 @@ export default function App() {
       >
         Wanscher
       </h1>
-      <Footer></Footer>
+      <Footer sunRaysHueRotation={setRayColorShift} rayInitColor={RAY_INIT_COLOR} />
     </main>
   );
 }

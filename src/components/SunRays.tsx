@@ -1,20 +1,36 @@
+import type { HSL } from "./HueSatPicker";
 import "./SunRays.css";
-import { createEffect, createSignal, onCleanup } from "solid-js";
-import { CSSProperty } from "../util/animationUtil";
-import type { JSX } from "solid-js";
+import type { Accessor, JSX } from "solid-js";
 
 interface SunRaysProps {
   numRays?: number;
   mvmtFrequencyMultiplier?: number;
   /* Default 0 to -numRays */
   zRangeStart?: number;
+  /** Base ray color. Exposed to rays as `--ray-h`, `--ray-s` and `--ray-l`. */
+  colorShift: Accessor<HSL>;
 }
 
-export default function SunRays(props: SunRaysProps) {
+/** Hue offset per ray (cycled by index) relative to `colorShift().h`; `null` renders a white ray. */
+const HUE_OFFSETS: ReadonlyArray<number | null> = [0, 50, null, 50];
+
+export default function SunRays(props: SunRaysProps): JSX.Element {
+  const numRays: number = props.numRays ?? 12;
+  const freqMul: number = props.mvmtFrequencyMultiplier ?? 1;
+  const rayStyles: JSX.CSSProperties[] = Array.from(
+    { length: numRays },
+    (_: unknown, i: number): JSX.CSSProperties => computeRayStyle(i, numRays, freqMul),
+  );
+
+  const colorVars = (): JSX.CSSProperties => {
+    const c: HSL = props.colorShift();
+    return { "--ray-h": `${c.h}`, "--ray-s": `${c.s}%`, "--ray-l": `${c.l}%` };
+  };
+
   return (
-    <div class="sun-rays">
-      {new Array(props.numRays ?? 12).fill(0).map((_, i) => (
-        <div class="sun-ray" style={computeRayStyle(i, props)} />
+    <div class="sun-rays" style={colorVars()}>
+      {rayStyles.map((style: JSX.CSSProperties) => (
+        <div class="sun-ray" style={style} />
       ))}
     </div>
   );
@@ -22,52 +38,41 @@ export default function SunRays(props: SunRaysProps) {
 
 const computeRayStyle = (
   index: number,
-  settings: SunRaysProps,
+  numRays: number,
+  freqMul: number,
 ): JSX.CSSProperties => {
-  settings.mvmtFrequencyMultiplier = settings.mvmtFrequencyMultiplier ?? 1;
-  settings.numRays = settings.numRays ?? 12;
-  settings.zRangeStart = settings.zRangeStart ?? 0;
-
-  const rayMovementFrequency =
-    (Math.random() - 0.5) * 2 * settings.mvmtFrequencyMultiplier; // in Hz
-  const baseLROffset = 200 / settings.numRays + 100;
-  const computedLROffset = `
+  const rayMovementFrequency: number = (Math.random() - 0.5) * 2 * freqMul; // in Hz
+  const baseLROffset: number = 200 / numRays + 100;
+  const computedLROffset: string = `
         calc(
             sin(
                 var(--site-elapsed-seconds) * ${rayMovementFrequency}
                 + ${index}
-            ) * 150vw 
+            ) * 150vw
             - ${baseLROffset}vw
         )`;
-  const computedRotation = `
+  const computedRotation: string = `
         rotate(
             calc(
-                var(--site-breath-driver) * ${settings.mvmtFrequencyMultiplier} * 20deg
+                var(--site-breath-driver) * ${freqMul} * 20deg
             )
         )`;
-  const rayWidth = Math.random() * 5 + 5; // in vw, since the container is 400vw wide
-  let rayColor = `white`;
-  switch (index % 4) {
-    case 0:
-      rayColor = `hsl(200, calc(50% * var(--bg-saturation-multiplier)), calc(80% * var(--bg-lightness-multiplier)))`;
-      break;
-    case 1:
-      rayColor = `hsl(250, calc(50% * var(--bg-saturation-multiplier)), calc(80% * var(--bg-lightness-multiplier)))`;
-      break;
-    case 3:
-      rayColor = `hsl(250, calc(50% * var(--bg-saturation-multiplier)), calc(80% * var(--bg-lightness-multiplier)))`;
-      break;
-    default:
-      rayColor = `hsl(0, 0%, 100%)`;
-      break;
-  }
-  const computedBackground = `linear-gradient(
-            -56deg, 
-            transparent ${50 - rayWidth / 2}%, 
-            ${rayColor}, 
+  const rayWidth: number = Math.random() * 5 + 5; // in vw, since the container is 400vw wide
+  const hueOffset: number | null = HUE_OFFSETS[index % HUE_OFFSETS.length] ?? null;
+  const rayColor: string =
+    hueOffset === null
+      ? `hsl(0, 0%, 100%)`
+      : `hsl(
+            calc(var(--ray-h) + ${hueOffset}),
+            calc(var(--ray-s) * var(--bg-saturation-multiplier)),
+            calc(var(--ray-l) * var(--bg-lightness-multiplier))
+        )`;
+  const computedBackground: string = `linear-gradient(
+            -56deg,
+            transparent ${50 - rayWidth / 2}%,
+            ${rayColor},
             transparent ${50 + rayWidth / 2}%
         )`;
-
 
   return {
     left: computedLROffset,
@@ -77,9 +82,3 @@ const computeRayStyle = (
     transform: computedRotation,
   };
 };
-/*
-  --main-bg-gradient-stop-01: hsl(200, calc(50% * var(--bg-saturation-multiplier)), calc(80% * var(--bg-lightness-multiplier)));
-  --main-bg-gradient-stop-02: hsl(250, calc(50% * var(--bg-saturation-multiplier)), calc(80% * var(--bg-lightness-multiplier)));
-  --main-bg-gradient-stop-03: hsl(0, 0%, 100%);
-  --main-bg-gradient-stop-04: hsl(0, calc(50% * var(--bg-saturation-multiplier)), calc(80% * var(--bg-lightness-multiplier)));
-*/
