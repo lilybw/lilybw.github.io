@@ -21,7 +21,7 @@
 .petal, .petal2 {
     transform-box: view-box;    /* origin is measured in SVG coordinates, not the petal's own box */
     transform-origin: 0 0;      /* = flower centre */
-    transition: transform 250ms ease-out;
+    transition: transform 125ms ease-in;
     fill: var(--DOBG-purple);
 }
 .petal:hover, .petal2:hover {
