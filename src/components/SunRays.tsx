@@ -7,28 +7,55 @@ interface SunRaysProps {
   mvmtFrequencyMultiplier?: number;
   /* Default 0 to -numRays */
   zRangeStart?: number;
-  /** Base ray color. Exposed to rays as `--ray-h`, `--ray-s` and `--ray-l`. */
+  /** Base ray color. Exposed to rays as `--ray-h`, `--ray-s`, `--ray-l` and `--ray-neutral`. */
   colorShift: Accessor<HSL>;
 }
 
-/** Hue offset per ray (cycled by index) relative to `colorShift().h`; `null` renders a white ray. */
+/** Hue offset per ray (cycled by index) relative to `colorShift().h`; `null` renders a neutral ray. */
 export const HUE_OFFSETS: ReadonlyArray<number | null> = [0, 50, null, 50];
 
-/** CSS color of a ray from base `h`, `s`, `l` CSS expressions and a hue offset; `null` yields white. */
-const rayColor = (h: string, s: string, l: string, hueOffset: number | null): string =>
+/** Base lightness (percent) below which neutral rays turn black instead of white. */
+export const NEUTRAL_FLIP_LIGHTNESS: number = 50;
+
+/** CSS expressions for each color channel; either literals or `var()` references. */
+interface ColorExprs {
+  h: string;
+  s: string;
+  l: string;
+  neutral: string;
+}
+
+const neutralFor = (l: number): string =>
+  l < NEUTRAL_FLIP_LIGHTNESS ? "hsl(0 0% 0%)" : "hsl(0 0% 100%)";
+
+const literalExprs = (c: HSL): ColorExprs => ({
+  h: `${c.h}`,
+  s: `${c.s}%`,
+  l: `${c.l}%`,
+  neutral: neutralFor(c.l),
+});
+
+const VAR_EXPRS: ColorExprs = {
+  h: "var(--ray-h)",
+  s: "var(--ray-s)",
+  l: "var(--ray-l)",
+  neutral: "var(--ray-neutral)",
+};
+
+const rayColor = (c: ColorExprs, hueOffset: number | null): string =>
   hueOffset === null
-    ? `hsl(0, 0%, 100%)`
+    ? c.neutral
     : `hsl(
-            calc(${h} + ${hueOffset}),
-            calc(${s} * var(--bg-saturation-multiplier)),
-            calc(${l} * var(--bg-lightness-multiplier))
+            calc(${c.h} + ${hueOffset})
+            calc(${c.s} * var(--bg-saturation-multiplier))
+            calc(${c.l} * var(--bg-lightness-multiplier))
         )`;
 
 /** The distinct ray colors for `base`, in `HUE_OFFSETS` order. */
-export const RAY_PALETTE = (base: HSL): string[] =>
-  [...new Set(HUE_OFFSETS)].map((o: number | null): string =>
-    rayColor(`${base.h}`, `${base.s}%`, `${base.l}%`, o),
-  );
+export const RAY_PALETTE = (base: HSL): string[] => {
+  const exprs: ColorExprs = literalExprs(base);
+  return [...new Set(HUE_OFFSETS)].map((o: number | null): string => rayColor(exprs, o));
+};
 
 export default function SunRays(props: SunRaysProps): JSX.Element {
   const numRays: number = props.numRays ?? 12;
@@ -39,8 +66,8 @@ export default function SunRays(props: SunRaysProps): JSX.Element {
   );
 
   const colorVars = (): JSX.CSSProperties => {
-    const c: HSL = props.colorShift();
-    return { "--ray-h": `${c.h}`, "--ray-s": `${c.s}%`, "--ray-l": `${c.l}%` };
+    const c: ColorExprs = literalExprs(props.colorShift());
+    return { "--ray-h": c.h, "--ray-s": c.s, "--ray-l": c.l, "--ray-neutral": c.neutral };
   };
 
   return (
@@ -52,11 +79,7 @@ export default function SunRays(props: SunRaysProps): JSX.Element {
   );
 }
 
-const computeRayStyle = (
-  index: number,
-  numRays: number,
-  freqMul: number,
-): JSX.CSSProperties => {
+const computeRayStyle = (index: number, numRays: number, freqMul: number): JSX.CSSProperties => {
   const rayMovementFrequency: number = (Math.random() - 0.5) * 2 * freqMul; // in Hz
   const baseLROffset: number = 200 / numRays + 100;
   const computedLROffset: string = `
@@ -75,11 +98,10 @@ const computeRayStyle = (
         )`;
   const rayWidth: number = Math.random() * 5 + 5; // in vw, since the container is 400vw wide
   const hueOffset: number | null = HUE_OFFSETS[index % HUE_OFFSETS.length] ?? null;
-  const color: string = rayColor("var(--ray-h)", "var(--ray-s)", "var(--ray-l)", hueOffset);
   const computedBackground: string = `linear-gradient(
             -56deg,
             transparent ${50 - rayWidth / 2}%,
-            ${color},
+            ${rayColor(VAR_EXPRS, hueOffset)},
             transparent ${50 + rayWidth / 2}%
         )`;
 
